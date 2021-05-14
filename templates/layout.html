@@ -1,0 +1,98 @@
+<!doctype html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>DeepFake Detector</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.2/particles.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/layout.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/footer.css') }}">
+</head>
+<!--Particle JS-->
+<script>
+	window.onload = function() {
+		  Particles.init({
+			selector: '.background',
+			maxParticles: 100,
+			connectParticles: true,
+			speed: 0.5,
+			sizeVariations: 5,
+						  });
+							}; 
+</script>
+<!--Upload button JS-->
+<script>
+const actualBtn = document.getElementById('actual-btn');
+const fileChosen = document.getElementById('file-chosen');
+actualBtn.addEventListener('change', function(){
+  fileChosen.textContent = this.files[0].name
+})
+</script>
+<body>
+	<!--NAVBAR-->
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+		  <div class="navbar-header">
+			<a class="navbar-brand" href="#">Deep Fake Detector</a>
+		  </div>
+		  <ul class="nav navbar-nav navbar-right">
+			<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+			<li><a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+		  </ul>
+		  <ul class="nav navbar-nav navbar-right">
+			<li class="active"><a href="/">Home</a></li>
+			<li><a href="/popular">Popular</a></li>
+			<li><a href="/detection">Detection API</a></li>
+			<li><a href="/app">Get our App</a></li>
+			<li><a href="/about">About</a></li>
+		  </ul>
+		</div>
+	  </nav> 
+
+	  {% block body %} {% endblock %}
+
+	<!--FOOTER-->
+	<!--
+	  <div class="container-fluid pb-0 mb-0 justify-content-center text-light " id="footercontainerfluid">
+     <footer>
+         <div class="row my-5 justify-content-center py-5">
+             <div class="col-11">
+                 <div class="row ">
+                     <div class="col-xl-8 col-md-4 col-sm-4 col-12 my-auto mx-auto a">
+                         <h3 class="text-muted mb-md-0 mb-5 bold-text">DeepFake Detector</h3>
+                     </div>
+                     <div class="col-xl-2 col-md-4 col-sm-4 col-12">
+                         <h6 class="mb-3 mb-lg-4 bold-text "><b><u>MENU</u></b></h6>
+                         <ul class="list-unstyled">
+                             <li><a href="/" class="mb-3 mb-lg-4 bold-text">Home</a></li>
+                             <li><a href="/popular" class="mb-3 mb-lg-4 bold-text">Popular</a></li>
+                             <li><a href="/detection" class="mb-3 mb-lg-4 bold-text">API</a></li>
+                             <li><a href="/app" class="mb-3 mb-lg-4 bold-text">App</a></li>
+                             <li><a href="/about" class="mb-3 mb-lg-4 bold-text">About</a></li>
+                         </ul>
+                     </div>
+                     <div class="col-xl-2 col-md-4 col-sm-4 col-12">
+                         <h6 class="mb-3 mb-lg-4 text-muted bold-text mt-sm-0 mt-5"><b><u>TEAM</u></b></h6>
+                         <ul class="mb-3 mb-lg-4 bold-text" style="list-style-type:none;">
+                         	<li>Ryan Pereira</li>
+                         	<li>Collin Pereira</li>
+                         	<li>Jeff Vaz</li>
+                         	<li>Yash Prasad</li>
+                         </ul>
+                         
+                     </div>
+                 </div>
+                 </div>
+             </div>
+         </div>
+     </footer>
+ </div>-->
+	  
+	<!--Particle JS-->
+	<canvas class="background"></canvas>
+</body>
+</html>

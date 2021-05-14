@@ -1,0 +1,61 @@
+
+.jbtn {
+  background-color: #1927ec;
+  font-size: 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  text-align: center;
+  color: aliceblue;
+  padding: 10px;
+  font-family: sans-serif;
+}
+
+#umainbox {
+  background-color: rgba(236, 252, 255, 0.93);
+}
+
+/*Upload Button*/
+label.myLabel input[type="file"] {
+  position: absolute;
+  top: -1000px;
+}
+.myLabel {
+  background-color: #1927ec;
+  font-size: 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  text-align: center;
+  color: aliceblue;
+  padding: 10px;
+  font-family: sans-serif;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.myLabel:hover {
+  background: #0311ce;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.container-bg1{
+  background-color: #e9e9e9f0;
+}
+
+div#loading {
+    border: 10px solid #f3f3f3; /* Light grey */
+    border-top: 10px solid #3498db; /* Blue */
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+    width: 35px;
+    height: 35px;
+    display: none;
+    /*background: url(/static/img/spinner.gif) no-repeat;*/
+    cursor: wait;
+    }
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

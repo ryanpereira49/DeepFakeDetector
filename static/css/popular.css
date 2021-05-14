@@ -1,0 +1,29 @@
+.main-container {
+ padding-left: 40px;
+ padding-top: 100px;
+ padding-bottom: 50px;
+ padding-right: 10px;
+ display:inline-block;
+}
+
+.card-bg{
+	width:320px;
+	height: auto;
+	border-radius: 10px;
+	background-color: #f4f4f4
+}
+
+.video-player {
+	border-radius: 10px;
+	border: 0;
+	padding-left: 10px;
+	margin-top: 10px;
+}
+
+.card-body{
+	padding-left: 30px;
+}
+
+.share-btn {
+	display:inline-block;
+}

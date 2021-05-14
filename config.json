@@ -1,0 +1,9 @@
+{
+  "params": {
+    "local_server": "True",
+    "local_uri": "mysql://root:@localhost/dfdb",
+    "prod_uri": "mysql://root:@localhost/dfdb",
+    "admin_usr": "ryan",
+    "admin_pass": "ryan"
+  }
+}

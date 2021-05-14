@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/results.css') }}">
+<link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='css/magicscroll.css') }}"/>
+<script type="text/javascript" src="{{ url_for('static',filename='js/magicscroll.js') }}"></script>
+
+<div class="container" id="vid">
+	 <video width="600" height="400" controls>
+	 	<source src="{{ url_for('static',filename='marked/framed.mp4')}}" type="video/mp4">
+Your browser does not support the video tag.
+	</video> 
+</div>
+
+<h1 style="text-align: center;"><b>{{ vid_list[0] }}</b></h1>
+
+<div class="container" id="frame">
+<div class="MagicScroll" >
+	<div>
+		{% for vid in vid_list[1] %}
+		{% set fname = 'frames/' + vid %}
+		    <img src="{{ url_for('static',filename=fname) }}"/>
+		{% endfor %}
+	</div>
+</div>
+
+<table border="1" class="tablecls">
+	<tr>
+		<th>Verdict</th>
+		<th>Accuacy</th>
+	</tr>
+	<tr>
+		<td>{{vid_list[6]}}</td>
+		<td>{{vid_list[7]}} %</td>
+	</tr>
+</table>
+
+<br><br>
+
+<table border="1" class="tablecls">
+	<tr>
+		<th>Date</th>
+		<th>Fake Frames</th>
+		<th>Real Frames</th>
+	</tr>
+	<tr>
+		<td>{{vid_list[3]}}</td>
+		<td>{{vid_list[4]}}</td>
+		<td>{{vid_list[5]}}</td>
+	</tr>
+</table>
+
+<br><br>
+
+<table border="1" class="tablecls">
+	<tr>
+		<th>Width</th>
+		<th>Height</th>
+		<th>codec_name</th>
+		<th>Bit Rate</th>
+		<th>Duration</th>
+		<th>Framerate</th>
+	</tr>
+	<tr>
+		<td>{{meta[0]}}</td>
+		<td>{{meta[1]}}</td>
+		<td>{{meta[2]}}</td>
+		<td>{{meta[3]}}</td>
+		<td>{{meta[4]}}</td>
+		<td>{{meta[5]}}</td>
+	</tr>
+</table>
+<br><br>
+</div>
+
+
+
+{% endblock %}
