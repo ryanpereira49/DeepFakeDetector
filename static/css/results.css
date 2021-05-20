@@ -1,20 +1,23 @@
-#vid{
-	padding-left: 300px;
-}
-
 #frame{
 	padding-top: 50px;
 }
 
-.tablecls{
-	 margin-left: auto;
- 	 margin-right: auto;
+.container-vid{
+	margin-right: auto;
+	margin-left: 15%;
+	width: 65%;
+	margin-bottom: 20px;
+	border-radius: 1.5rem;
 }
 
-table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
+.container-mscr{
+	margin-right: auto;
+	margin-left: auto;
+	width: 100%;
+	margin-bottom: 20px;
+	border-radius: 1.5rem;
 }
-th, td {
-  padding: 15px;
+
+.col-md-7{
+	padding-left: 200px;
 }

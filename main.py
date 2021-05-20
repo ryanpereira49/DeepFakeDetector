@@ -27,7 +27,7 @@ if(local_sv):
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = params["prod_uri"]
 
-app.config["video_uploads"] = "D://Projects//DeepfakesDetection//venv//ml//uploaded_videos"
+app.config["video_uploads"] = "D://Projects//DeepfakesDetection//venv//static//Uploaded_videos"
 app.config["allowed_video_extensions"] = ["MP4", "MKV", "MOV", "WEBM","FLV"]
 
 db = SQLAlchemy(app)
@@ -64,7 +64,10 @@ def indexpage():
 
 @app.route('/popular')
 def popularpage():
-    return render_template('popular.html')
+    vid = Videos.query.all()
+
+
+    return render_template('popular.html',vid=vid)
 
 @app.route('/detection')
 def apipage():

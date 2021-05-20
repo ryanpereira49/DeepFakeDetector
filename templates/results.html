@@ -6,72 +6,137 @@
 <link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='css/magicscroll.css') }}"/>
 <script type="text/javascript" src="{{ url_for('static',filename='js/magicscroll.js') }}"></script>
 
+<div class="container">
+	<div class="jumbotron container-vid">
 <div class="container" id="vid">
 	 <video width="600" height="400" controls>
 	 	<source src="{{ url_for('static',filename='marked/framed.mp4')}}" type="video/mp4">
 Your browser does not support the video tag.
 	</video> 
 </div>
+<h3 style="text-align: center;"><b>{{ vid_list[0] }}</b></h3>
+</div></div>
 
-<h1 style="text-align: center;"><b>{{ vid_list[0] }}</b></h1>
-
-<div class="container" id="frame">
-<div class="MagicScroll" >
-	<div>
-		{% for vid in vid_list[1] %}
-		{% set fname = 'frames/' + vid %}
-		    <img src="{{ url_for('static',filename=fname) }}"/>
-		{% endfor %}
+<div class="container">
+	<div class="jumbotron container-l">
+		<div class="row justify-content-md-center">
+			<div class="col-md-7">
+				<h3><u>Verdict</u></h3>
+			</div>
+			<div class="col-md-5">
+				<h3><u>Accuracy</u></h3>
+			</div>
+		</div>
+		<div class="row justify-content-md-center">
+			<div class="col-md-7">
+				{% if vid_list[6] == "FAKE" %}
+					<h3 style="color: rgb(255,0,0);"><b>{{vid_list[6]}}</b></h3>
+				{% else %}
+					<h3 style="color: rgb(0,255,0);">{{vid_list[6]}}</h3>
+				{% endif %}
+				
+			</div>
+			<div class="col-md-5">
+				<h3 style="padding-left: 40px;">{{vid_list[7]}}%</h3>
+			</div>
+		</div>
 	</div>
 </div>
 
-<table border="1" class="tablecls">
-	<tr>
-		<th>Verdict</th>
-		<th>Accuacy</th>
-	</tr>
-	<tr>
-		<td>{{vid_list[6]}}</td>
-		<td>{{vid_list[7]}} %</td>
-	</tr>
-</table>
+<div class="container">
+	<div class="jumbotron container-mscr">
+		<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+    	Show Frames
+  		</button>
+		<div class="collapse" id="collapseExample">
+			<div class="card card-body">
+				<div class="container" id="frame">
+					<div class="MagicScroll" >
+						<div>
+							{% for vid in vid_list[1] %}
+							{% set fname = 'frames/' + vid %}
+		    					<img src="{{ url_for('static',filename=fname) }}"/>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 <br><br>
 
-<table border="1" class="tablecls">
-	<tr>
-		<th>Date</th>
-		<th>Fake Frames</th>
-		<th>Real Frames</th>
-	</tr>
-	<tr>
-		<td>{{vid_list[3]}}</td>
-		<td>{{vid_list[4]}}</td>
-		<td>{{vid_list[5]}}</td>
-	</tr>
-</table>
+<div class="container">
+	<div class="jumbotron container-l">
+		<div class="row justify-content-md-center">
+			<div class="col-md-4">
+				<h3><u>Date</u></h3>
+			</div>
+			<div class="col-md-4">
+				<h3><u>Fake Frames</u></h3>
+			</div>
+			<div class="col-md-4">
+				<h3><u>Real Frames</u></h3>
+			</div>
+		</div>
+		<div class="row justify-content-md-center">
+			<div class="col-md-4">
+				<h3>{{vid_list[3]}}</h3>
+			</div>
+			<div class="col-md-4">
+				<h3 style="color: rgb(255,0,0);">{{vid_list[4]}}</h3>
+			</div>
+			<div class="col-md-4">
+				<h3 style="color: rgb(0,255,0);">{{vid_list[5]}}</h3>
+			</div>
+		</div>
+	</div>
+</div>
 
-<br><br>
-
-<table border="1" class="tablecls">
-	<tr>
-		<th>Width</th>
-		<th>Height</th>
-		<th>codec_name</th>
-		<th>Bit Rate</th>
-		<th>Duration</th>
-		<th>Framerate</th>
-	</tr>
-	<tr>
-		<td>{{meta[0]}}</td>
-		<td>{{meta[1]}}</td>
-		<td>{{meta[2]}}</td>
-		<td>{{meta[3]}}</td>
-		<td>{{meta[4]}}</td>
-		<td>{{meta[5]}}</td>
-	</tr>
-</table>
-<br><br>
+<div class="container">
+	<div class="jumbotron container-l">
+		<div class="row justify-content-md-center">
+			<div class="col-md-2">
+				<h4 style="font-size: 20px;"><u>Width</u></h4>
+			</div>
+			<div class="col-md-2">
+				<h4 style="font-size: 20px;"><u>Height</u></h4>
+			</div>
+			<div class="col-md-2">
+				<h4 style="font-size: 20px;"><u>codec_name</u></h4>
+			</div>
+			<div class="col-md-2">
+				<h4 style="font-size: 20px;"><u>Bit Rate</u></h4>
+			</div>
+			<div class="col-md-2">
+				<h4 style="font-size: 20px;"><u>Duration</u></h4>
+			</div>
+			<div class="col-md-2">
+				<h4 style="font-size: 20px;"><u>Framerate</u></h4>
+			</div>
+		</div>
+		<div class="row justify-content-md-center">
+			<div class="col-md-2">
+				<h4 style="font-size: 25px;">{{meta[0]}}</h4>
+			</div>
+			<div class="col-md-2">
+				<h4 style="font-size: 25px;">{{meta[1]}}</h4>
+			</div>
+			<div class="col-md-2">
+				<h4 style="font-size: 25px;">{{meta[2]}}</h4>
+			</div>
+			<div class="col-md-2">
+				<h4 style="font-size: 25px;">{{meta[3]}}</h4>
+			</div>
+			<div class="col-md-2">
+				<h4 style="font-size: 25px;">{{meta[4]}}</h4>
+			</div>
+			<div class="col-md-2">
+				<h4 style="font-size: 25px;">{{meta[5]}}</h4>
+			</div>
+		</div>
+	</div>
 </div>
 
 
