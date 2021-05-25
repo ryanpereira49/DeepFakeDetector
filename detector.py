@@ -7,7 +7,7 @@ import numpy as np
 
 
 class Dfd:
-    def detect(self,vpath):
+    def detect(self,vpath,filename):
 
         detector = dlib.get_frontal_face_detector()
         model = models.load_model('ml//model//selfds_idkif_itworked_mesocep_128_3.h5')
@@ -24,7 +24,7 @@ class Dfd:
         frame_height = int(cap.get(4))
         size = (frame_width, frame_height)
 
-        out = cv2.VideoWriter('static/marked/framed.mp4',
+        out = cv2.VideoWriter(os.path.join('static/marked/',filename),
                               cv2.VideoWriter_fourcc(*'HEVC'),
                               20, size)
         wrt = []

@@ -22,6 +22,7 @@ local_sv = params["local_server"]
 app = Flask(__name__)
 app.secret_key = 'ryan-secret-key'
 
+
 if(local_sv):
     app.config['SQLALCHEMY_DATABASE_URI'] = params["local_uri"]
 else:
@@ -50,6 +51,7 @@ class Videos(db.Model):
     vdate = db.Column(db.String(20), nullable=True)
     vfrfake = db.Column(db.Integer, nullable=False)
     vfrreal = db.Column(db.Integer, nullable=False)
+    vUname = db.Column(db.String(20), nullable=True)
 
 class Users(db.Model):
     Uno = db.Column(db.Integer, primary_key=True)
@@ -71,7 +73,6 @@ def indexpage():
 @app.route('/popular')
 def popularpage():
     vid = Videos.query.all()
-
 
     return render_template('popular.html',vid=vid)
 
@@ -128,7 +129,6 @@ def login():
         Unamef = request.form.get('uname')
         Upassf = request.form.get('upass')
         x = [u for u in usersdb if Unamef == u.Uname and Upassf == u.Upass]
-        print(x)
         if not x:
             return render_template('login.html',msg="Invalid Credentials!")
         if x[0].Uname == Unamef:
@@ -189,6 +189,7 @@ def results():
 
 @app.route("/upload-video", methods=["GET", "POST"])
 def upload_video():
+    cnt9 = 1
     if request.method == "POST":
             video = request.files["video"]
             if video.filename == "": #check filename exists
@@ -206,13 +207,24 @@ def upload_video():
                     except Exception as e:
                         print('Failed to delete %s. Reason: %s' % (file_path, e))
                 filename = secure_filename(video.filename)
+                for root, dirs, files in os.walk(app.config["video_uploads"]):
+                    for filename in files:
+                        if filename.endswith(('.MP4','.MKV','.MOV','.WEBM','.FLV','.mp4','mkv','.mov','.webm','.flv')):
+                            cnt9 += 1
+                nfilename = filename[:-4]
+                ext = filename[-4:]
+                filename = nfilename+str(cnt9)+ext
                 video.save(os.path.join(app.config["video_uploads"], filename)) #save video
                 vpath = os.path.join(app.config["video_uploads"], filename)
-                va = d.detect(vpath)
+                va = d.detect(vpath,filename)
                 #v.vid(va[0],vpath)
                 fkr = va[1]
                 fkrs = json.dumps(fkr)
-                entry = Videos(vname=filename, fakeframes=fkrs, vpath=vpath,verd=va[2][0],vacc=va[2][1], vdate=datetime.datetime.now(),vfrfake=va[0].count("FAKE"),vfrreal=va[0].count("REAL"))
+                try:
+                    UnameVn = session['Uname']
+                except:
+                    UnameVn = "Guest"
+                entry = Videos(vname=filename, fakeframes=fkrs, vpath=vpath,verd=va[2][0],vacc=va[2][1], vdate=datetime.datetime.now(),vfrfake=va[0].count("FAKE"),vfrreal=va[0].count("REAL"),vUname=UnameVn)
                 db.session.add(entry)
                 db.session.commit()
                 return redirect(request.url)

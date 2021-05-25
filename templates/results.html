@@ -10,7 +10,8 @@
 	<div class="jumbotron container-vid">
 <div class="container" id="vid">
 	 <video width="600" height="400" controls>
-	 	<source src="{{ url_for('static',filename='marked/framed.mp4')}}" type="video/mp4">
+	 	{% set vname = 'marked/'+ vid_list[0] %}
+	 	<source src="{{ url_for('static',filename=vname)}}" type="video/mp4">
 Your browser does not support the video tag.
 	</video> 
 </div>
