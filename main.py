@@ -1,4 +1,4 @@
-from flask import Flask, escape, request, render_template, request, redirect, session
+from flask import Flask, escape, request, render_template, request, redirect, session, url_for
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -51,6 +51,12 @@ class Videos(db.Model):
     vfrfake = db.Column(db.Integer, nullable=False)
     vfrreal = db.Column(db.Integer, nullable=False)
 
+class Users(db.Model):
+    Uno = db.Column(db.Integer, primary_key=True)
+    Uname = db.Column(db.String(20), nullable=False)
+    Uemail = db.Column(db.String(20), nullable=False)
+    Upass = db.Column(db.String(20), nullable=False)
+
 #class
 
 
@@ -94,9 +100,23 @@ def submit_form():
 
     return render_template('about.html')
 
-@app.route('/signup')
+@app.route('/signup',methods=['GET','POST'])
 def signup():
-    return render_template('about.html')
+    if request.method == 'POST':
+        usersdb = Users.query.all()
+        Unamef = request.form.get('uname')
+        Uemailf = request.form.get('uemail')
+        Upassf = request.form.get('upass')
+        for u in usersdb:
+            if Unamef == u.Uname:
+                return render_template('signup.html',msg='Username Alerady Exists')
+            if Uemailf == u.Uemail:
+                return render_template('signup.html',msg='Email Alerady Exists')
+        entry = Users(Uname=Unamef,Uemail=Uemailf,Upass=Upassf)
+        db.session.add(entry)
+        db.session.commit()
+        return render_template('login.html',msg='Registration Sucessful, You can now Login')
+    return render_template('signup.html')
 
 @app.route('/login',methods=['GET','POST'])
 def login():
@@ -104,10 +124,22 @@ def login():
         pass
     
     if request.method == 'POST':
-        username = request.form.get('uname')
-        password = request.form.get('pass')
-        if(username == params['admin_usr'] and password == params["admin_pass"]):
-            session['user'] = username
+        usersdb = Users.query.all()
+        Unamef = request.form.get('uname')
+        Upassf = request.form.get('upass')
+        x = [u for u in usersdb if Unamef == u.Uname and Upassf == u.Upass]
+        print(x)
+        if not x:
+            return render_template('login.html',msg="Invalid Credentials!")
+        if x[0].Uname == Unamef:
+            session['Uname'] = Unamef
+            session['login'] = True
+            return render_template('index.html')
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('Uname',None)
     return render_template('login.html')
 
 def allowed_video(filename): #check extension

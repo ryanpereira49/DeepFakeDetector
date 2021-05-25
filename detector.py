@@ -60,11 +60,11 @@ class Dfd:
                 preds.append(pr)
                 if pr > 0.5:
                     cl.append("REAL")
-                    fff = cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 1)
+                    fff = cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 else:
                     fr.append(str(fp[14:]))
                     cl.append("FAKE")
-                    fff = cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 1)
+                    fff = cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
             out.write(frame)
 
         #print("Found faces:", len(preds))
@@ -72,11 +72,15 @@ class Dfd:
         rc = cl.count("REAL")
         if fc > rc:
             ver.append("FAKE")
-            ver.append((fc / (rc + fc)) * 100 - 5)
+            acc = str((fc / (rc + fc)) * 100 - 5)
+            acc = acc[:5]
+            ver.append(acc)
             #print("FAKE video, Accuracy = {}".format((fc / (rc + fc)) * 100 - 12))
         else:
             ver.append("REAL")
-            ver.append((rc / (rc + fc)) * 100 - 5)
+            acc = str((rc / (rc + fc)) * 100 - 5)
+            acc = acc[:5]
+            ver.append(acc)
             #print("REAL video, Accuracy = {}".format((rc / (rc + fc)) * 100 - 12))
         #print(cl.count("REAL"), cl.count("FAKE"))
         return [cl,fr,ver]
