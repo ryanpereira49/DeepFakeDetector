@@ -22,10 +22,12 @@ local_sv = params["local_server"]
 app = Flask(__name__)
 app.secret_key = 'ryan-secret-key'
 
-if (local_sv):
-    app.config['SQLALCHEMY_DATABASE_URI'] = params["local_uri"]
-else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = params["prod_uri"]
+# if (local_sv):
+#     app.config['SQLALCHEMY_DATABASE_URI'] = params["local_uri"]
+# else:
+#     app.config['SQLALCHEMY_DATABASE_URI'] = params["prod_uri"]
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/dfdb'
 
 # app.config["video_uploads"] = "D://Projects//DeepfakesDetection//venv//static//Uploaded_videos"
 
@@ -36,24 +38,65 @@ app.config["allowed_video_extensions"] = ["MP4", "MKV", "MOV", "WEBM", "FLV"]
 db = SQLAlchemy(app)
 
 
-class Contact(db.Model):
-    sno = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False)
-    email = db.Column(db.Integer, nullable=False)
-    message = db.Column(db.String(20), nullable=False)
-    date = db.Column(db.String(20), nullable=True)
+# class Contact(db.Model):
+#     sno = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(20), nullable=False)
+#     email = db.Column(db.Integer, nullable=False)
+#     message = db.Column(db.String(20), nullable=False)
+#     date = db.Column(db.String(20), nullable=True)
+
+class users(db.Model):
+    __tablename__ = "users"
+    uid = db.Column("UID", db.String(5), primary_key=True)
+    uname = db.Column("username", db.String(25), nullable=False)
+    password = db.Column("password", db.String(25), nullable=False)
+    email = db.Column("email", db.String(25), nullable=False)
+    DOB = db.Column("DOB", db.String(25), nullable=False)
+
+    def __init__(self, uid, uname, password, email, DOB):
+        self.uid = uid
+        self.uname = uname
+        self.password = password
+        self.email = email
+        self.DOB = DOB
 
 
-class Videos(db.Model):
-    vno = db.Column(db.Integer, primary_key=True)
-    vname = db.Column(db.String(25), nullable=False)
-    fakeframes = db.Column(db.Text, nullable=False)
-    vpath = db.Column(db.Text, nullable=False)
-    verd = db.Column(db.String(20), nullable=False)
-    vacc = db.Column(db.String(20), nullable=False)
-    vdate = db.Column(db.String(20), nullable=True)
-    vfrfake = db.Column(db.Integer, nullable=False)
-    vfrreal = db.Column(db.Integer, nullable=False)
+# class Videos(db.Model):
+#     vno = db.Column(db.Integer, primary_key=True)
+#     vname = db.Column(db.String(25), nullable=False)
+#     fakeframes = db.Column(db.Text, nullable=False)
+#     vpath = db.Column(db.Text, nullable=False)
+#     verd = db.Column(db.String(20), nullable=False)
+#     vacc = db.Column(db.String(20), nullable=False)
+#     vdate = db.Column(db.String(20), nullable=True)
+#     vfrfake = db.Column(db.Integer, nullable=False)
+#     vfrreal = db.Column(db.Integer, nullable=False)
+
+
+class Video(db.Model):
+    __tablename__ = "video"
+    VID = db.Column("VID", db.String(5), primary_key=True)
+    path = db.Column("path", db.String(200), nullable=False)
+    doup = db.Column("doup", db.String(20), nullable=True)
+    label = db.Column("label", db.String(5), nullable=False)
+    fakeframes = db.Column("fakeframes", db.Text, nullable=True)
+    vname = db.Column("vname", db.String(25), nullable=False)
+    vfrfake = db.Column("vfrfake", db.Integer, nullable=False)
+    vfrreal = db.Column("vfrreal", db.Integer, nullable=False)
+    avgwt = db.Column("avgwt", db.String(25), nullable=True)
+    UID = db.Column("UID", db.String(5), nullable=True)
+
+    def __init__(self, VID, path, doup, label, fakeframes, vname, vfrfake, vfrreal, avgwt, UID):
+        self.VID = VID
+        self.path = path
+        self.doup = doup
+        self.label = label
+        self.fakeframes = fakeframes
+        self.vname = vname
+        self.vfrfake = vfrfake
+        self.vfrreal = vfrreal
+        self.avgwt = avgwt
+        self.UID = UID
 
 
 # class
@@ -68,9 +111,32 @@ def indexpage():
     return render_template('index.html')
 
 
+@app.route('/dbtest')
+def testdb():
+    # insdb()
+    uans = users.query.all()
+    # print(users.query.count())
+    ass = " "
+    for r in uans:
+        ass += f"{r.uid} | {r.uname} | {r.password} | {r.email} | {r.DOB} \n"
+    vans = Video.query.all()
+    for v in vans:
+        ass += f"{v.VID} | {v.path} | {v.doup} | {v.label} | {v.fakeframes} | {v.vname} | {v.vfrfake} | {v.vfrreal} | {v.avgwt} | {v.UID} | "
+    return ass
+
+
+def insdb():
+    tot = users.query.count() + 1
+    uid = 'U0000'
+    uid = uid[:-1 * len(str(tot))] + str(tot)
+    entry = users(uid, "josh", "adlkskd", "joah@email.com", datetime.datetime.now())
+    db.session.add(entry)
+    db.session.commit()
+
+
 @app.route('/popular')
 def popularpage():
-    vid = Videos.query.all()
+    vid = Video.query.all()
 
     return render_template('popular.html', vid=vid)
 
@@ -97,9 +163,9 @@ def submit_form():
         email = request.form.get('email')
         msg = str(request.form.get('message'))
 
-        entry = Contact(name=name, email=email, message=msg, date=datetime.datetime.now())
-        db.session.add(entry)
-        db.session.commit()
+        # entry = Contact(name=name, email=email, message=msg, date=datetime.datetime.now())
+        # db.session.add(entry)
+        # db.session.commit()
 
     return render_template('about.html')
 
@@ -155,7 +221,7 @@ def results():
     else:
         fkfrm = fkfrmj
 
-    # vid_list.append(fkfrm)
+    vid_list.append(fkfrm)
     # vid_list.append(vid.vpath)
     # vid_list.append(vid.vdate)
     # vid_list.append(vid.vfrfake)

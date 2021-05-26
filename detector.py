@@ -65,7 +65,7 @@ class Dfd():
 
     def makepreds(self):
         cap = cv2.VideoCapture(self.vpath)
-        print("Frame count:", cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        #print("Frame count:", cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
         frame_width = int(cap.get(3))
         frame_height = int(cap.get(4))
@@ -115,10 +115,10 @@ class Dfd():
                     self.frameMark[fno] = FrameLabel(fno, [x1, y1, x2, y2], 1)
                 else:
                     cl.append(0)
-                    fr.append(fp)
+                    fr.append(fp[14:])
                     self.frameMark[fno] = FrameLabel(fno, [x1, y1, x2, y2], 0)
 
-        print("All write:{}".format(all(wrt)))
+        #print("All write:{}".format(all(wrt)))
         return preds, cl, fr
 
     def markit(self, verdict):
@@ -191,7 +191,7 @@ class Dfd():
             mxfsq = max(fksq)
 
         if rlsq:
-            mxrlq = max(rlsq)
+            mxrsq = max(rlsq)
 
         # print(vidname)
         # print(f"fake {fc}, real {rc}")
@@ -200,6 +200,7 @@ class Dfd():
         # print("Fake seq:{}, Real seq:{}".format(mxfsq, mxrlq))
 
         verdict = 1 if mxrsq > mxfsq else 0
+        print(mxrsq,mxfsq)
         self.markit(verdict)
 
         return [cl, fr, verdict, avgwt]
