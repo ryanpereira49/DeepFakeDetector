@@ -1,4 +1,5 @@
-from flask import Flask, escape, request, render_template, request, redirect, session, jsonify
+from flask import Flask, escape, request, render_template, request, redirect, session, jsonify, send_from_directory, \
+    url_for
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -208,6 +209,15 @@ def results():
     if "vidresd" in session:
         vidres = session["vidresd"]
 
+    disb = True
+    if "dbdisb" in session:
+        if session['dbdisb'] == "disabled":
+            disb = False
+        else:
+            disb = True
+    else:
+        session["dbdisb"] = "enabled"
+
     vid_list = []
     meta = []
     # vid_list.append(vid.vname)
@@ -246,8 +256,9 @@ def results():
     meta.append(int(video_stream['bit_rate']))
     meta.append(str(video_stream['duration']))
     meta.append(str(video_stream['avg_frame_rate'])[:2])
+    print(disb)
 
-    return render_template("results.html", vid_list=vid_list, meta=meta)
+    return render_template("results.html", vid_list=vid_list, meta=meta,disb = disb)
 
 
 @app.route("/upload-video", methods=["GET", "POST"])
@@ -339,6 +350,39 @@ def apires(usrname):
 
     else:
         return "Please send POST request"
+
+
+@app.route('/dmvfuanon', methods=["POST", "GET"])
+def downvid():
+    if request.method == "GET":
+        if "vidresd" in session:
+            return send_from_directory(r'F:\Docs\Degree College ( St.Francis )\BE\B.E Proj\WebappPyc\static\marked',
+                                       'framed.mp4', as_attachment=True)
+        else:
+            redirect(url_for("indexpage"))
+
+
+@app.route('/apv2db', methods=["GET", "POST"])
+def add2db():
+    if "vidresd" in session:
+        vals = session["vidresd"]
+        vids = Video.query.all()
+        ids = []
+        for v in vids:
+            ids.append(v.VID)
+
+        vid = 'V0000'
+        newid = max([int(x[1:].lstrip('0')) for x in ids]) + 1
+        newid = vid[:-1 * len(str(newid))] + str(newid)
+        entry = Video(newid, vals["vpath"], vals["doup"], vals["label"], vals['fakeframes'], vals['vname'],
+                      vals['vfrfake'], vals['vfrreal'], vals['avgwt'], '')
+
+        # db.session.add(entry)
+        # db.session.commit()
+        print("added 2 db")
+        if "dbdisb" in session:
+            session["dbdisb"] = "disabled"
+        return results()
 
 
 app.run(debug=True)

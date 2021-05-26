@@ -15,12 +15,38 @@ Your browser does not support the video tag.
 	</video> 
 </div>
 <h3 style="text-align: center;"><b>{{ vid_list[0] }}</b></h3>
-		<div class="d-flex text-center">
-  <button type="button" class="btn btn-primary btn-lg">Primary</button>
-			<button type="button" class="btn btn-primary btn-lg">Secondary</button>
+<!--		<div class="row justify-content-md-center">-->
+<!--			<div class="col-md-7">-->
+<!--				<button type="button" class="btn btn-primary btn-lg">Primary</button>-->
+<!--			</div>-->
+<!--			<div class="col-md-5">-->
+<!--				<button type="button" class="btn btn-dark btn-lg">Sec</button>-->
+<!--			</div>-->
+<!--		</div>-->
 </div>
 </div>
 
+</div>
+
+<div class="container">
+	<div class="jumbotron container-1>">
+		<div class="row justify-content-md-center">
+			<div class="col-md-7">
+<!--				<form id="download-btn" action="/dmvfuanon" method="POST">-->
+<!--					<button type="submit" class="btn btn-primary btn-lg" value="submit">Download</button>-->
+<!--				</form>-->
+				<a href="/dmvfuanon" type="button" class="btn btn-primary btn-lg">Download</a>
+			</div>
+			<div class="col-md-5">
+				{% if not disb %}
+					<a href="/apv2db" type="button" class="btn btn-primary btn-lg hidden">Add To Public Database</a>
+				{% endif %}
+				{% if disb %}
+					<a href="/apv2db" type="button" class="btn btn-primary btn-lg">Add To Public Database</a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="container">
