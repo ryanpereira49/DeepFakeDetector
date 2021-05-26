@@ -1,0 +1,17 @@
+.info-text{
+	text-align: left;
+}
+
+.code-block{
+	color: #ffb647;
+	background-color: #353535;
+	max-width: auto%;
+	width: auto;
+	
+}
+
+.code-content{
+	padding-top: 5%;
+	padding-bottom: 5%;
+	text-align: center;
+}

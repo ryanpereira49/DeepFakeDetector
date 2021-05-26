@@ -1,1 +1,194 @@
 {% extends "layout.html" %}
+
+{% block body %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/api.css') }}">
+
+
+<div class="container">
+	<div class="jumbotron">
+		<h1 class="text-center">DeepFake Detection API</h1>
+		<br>
+		<div class="container info-text">
+			The DFD API is accessed by sending POST requests on specific URLs as described below. The base URL is http://127.0.0.1:5000/, and you obtain the full URL by appending request’s path to the base URL. You can pass two types of responses as follows.
+		</div>
+		<h2>1. Deepfake Detection request</h2>
+		<div class="container info-text">
+			With our API you can pass the video through POST request with the base URL and the video file.
+		</div>
+		<br>
+		<div class="code-block text-centerex">
+			<div class="code-content">
+			URL = "http://127.0.0.1:5000/dfapi<br><br>
+			files = 'Path to your file'<br><br>
+			request.post(url=URL,file=files)<br>
+			</div>
+		</div>
+		<br>
+		<h2>Request Response</h2>
+		<br>
+		<table class="table">
+		  <thead>
+		    <tr>
+		      <th scope="col">#</th>
+		      <th scope="col">Field</th>
+		      <th scope="col">Type</th>
+		      <th scope="col">Description</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr>
+		      <th scope="row">1</th>
+		      <td>accuracy</td>
+		      <td>String</td>
+		      <td>Accuracy of predection</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">2</th>
+		      <td>date</td>
+		      <td>DateTime</td>
+		      <td>Date of Upload</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">3</th>
+		      <td>fake_frames</td>
+		      <td>String</td>
+		      <td>No. of Fake Frames</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">4</th>
+		      <td>name</td>
+		      <td>String</td>
+		      <td>Name of file</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">5</th>
+		      <td>real_frames</td>
+		      <td>String</td>
+		      <td>No. of Real Frames</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">6</th>
+		      <td>url</td>
+		      <td>URL</td>
+		      <td>Url of file</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">7</th>
+		      <td>verdict</td>
+		      <td>String</td>
+		      <td>Detection Verdict</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">8</th>
+		      <td>avg_frame_rate</td>
+		      <td>String</td>
+		      <td>Average Frame Rate</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">9</th>
+		      <td>bit_rate</td>
+		      <td>String</td>
+		      <td>Video Bitrate</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">10</th>
+		      <td>codec_name</td>
+		      <td>String</td>
+		      <td>Codec Used</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">11</th>
+		      <td>duration</td>
+		      <td>String</td>
+		      <td>Duration Of video</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">12</th>
+		      <td>height</td>
+		      <td>String</td>
+		      <td>Vertical Resolution of video</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">13</th>
+		      <td>width</td>
+		      <td>String</td>
+		      <td>Horizontal Resolution of video</td>
+		    </tr>
+		  </tbody>
+		</table>
+		<br>
+		<h2>2. Popular Videos Data Request</h2>
+		<div class="container info-text">
+			A simple request with the base url combined with /data will give you the data of all the popular videos added to the public database.
+		</div>
+		<br>
+		<div class="code-block text-centerex">
+			<div class="code-content">
+			URL = url_vid = "http://127.0.0.1:5000/dfapi/data<br>
+			<br>
+			request.post(url=URL)<br>
+			</div>
+		</div>
+		<br>
+		<h2>Request Response</h2>
+		<br>
+		<table class="table">
+		  <thead>
+		    <tr>
+		      <th scope="col">#</th>
+		      <th scope="col">Field</th>
+		      <th scope="col">Type</th>
+		      <th scope="col">Description</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr>
+		      <th scope="row">1</th>
+		      <td>accuracy</td>
+		      <td>String</td>
+		      <td>Accuracy of predection</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">2</th>
+		      <td>date</td>
+		      <td>DateTime</td>
+		      <td>Date of Upload</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">3</th>
+		      <td>fake_frames</td>
+		      <td>String</td>
+		      <td>No. of Fake Frames</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">4</th>
+		      <td>name</td>
+		      <td>String</td>
+		      <td>Name of file</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">5</th>
+		      <td>real_frames</td>
+		      <td>String</td>
+		      <td>No. of Real Frames</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">6</th>
+		      <td>url</td>
+		      <td>URL</td>
+		      <td>Url of file</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">7</th>
+		      <td>verdict</td>
+		      <td>String</td>
+		      <td>Detection Verdict</td>
+		    </tr>
+		  </tbody>
+		</table>
+	</div>
+</div>
+
+
+
+{% endblock %}

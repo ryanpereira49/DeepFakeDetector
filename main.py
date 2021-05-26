@@ -1,4 +1,4 @@
-from flask import Flask, escape, request, render_template, request, redirect, session, url_for
+from flask import Flask, escape, request, render_template, request, redirect, session, url_for, jsonify
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -208,8 +208,8 @@ def upload_video():
                         print('Failed to delete %s. Reason: %s' % (file_path, e))
                 filename = secure_filename(video.filename)
                 for root, dirs, files in os.walk(app.config["video_uploads"]):
-                    for filename in files:
-                        if filename.endswith(('.MP4','.MKV','.MOV','.WEBM','.FLV','.mp4','mkv','.mov','.webm','.flv')):
+                    for filenamez in files:
+                        if filenamez.endswith(('.MP4','.MKV','.MOV','.WEBM','.FLV','.mp4','mkv','.mov','.webm','.flv')):
                             cnt9 += 1
                 nfilename = filename[:-4]
                 ext = filename[-4:]
@@ -232,6 +232,113 @@ def upload_video():
                 print("That file extension is not allowed")
                 return redirect(request.url)
     return results()
+
+@app.route('/dfapi', methods=["POST"])
+def dfapi():
+    # check if the post request has the file part
+    if 'video' not in request.files:
+        resp = jsonify({'message': 'No video part in the request'})
+        resp.status_code = 400
+        return resp
+    video = request.files["video"]
+    if video.filename == "":  # check filename exists
+        resp = jsonify({'message': 'No file selected for uploading'})
+        resp.status_code = 400
+        return resp
+    if video and allowed_video(video.filename):
+
+        folder = r'D:\Projects\DeepfakesDetection\venv\static\frames'
+        for filename in os.listdir(folder):
+            file_path = os.path.join(folder, filename)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print('Failed to delete %s. Reason: %s' % (file_path, e))
+        filename = secure_filename(video.filename)
+        cnt9 = 1
+        for root, dirs, files in os.walk(app.config["video_uploads"]):
+            for filenamez in files:
+                if filenamez.endswith(('.MP4', '.MKV', '.MOV', '.WEBM', '.FLV', '.mp4', 'mkv', '.mov', '.webm', '.flv')):
+                    cnt9 += 1
+        nfilename = filename[:-4]
+        ext = filename[-4:]
+        filename = nfilename + str(cnt9) + ext
+        video.save(os.path.join(app.config["video_uploads"], filename))  # save video
+        vpath = os.path.join(app.config["video_uploads"], filename)
+        va = d.detect(vpath, filename)
+        # v.vid(va[0],vpath)
+        fkr = va[1]
+        fkrs = json.dumps(fkr)
+        try:
+            UnameVn = session['Uname']
+        except:
+            UnameVn = "Guest"
+        entry = Videos(vname=filename, fakeframes=fkrs, vpath=vpath, verd=va[2][0], vacc=va[2][1],
+                       vdate=datetime.datetime.now(), vfrfake=va[0].count("FAKE"), vfrreal=va[0].count("REAL"),
+                       vUname=UnameVn)
+        db.session.add(entry)
+        db.session.commit()
+        ret = api_result()
+        resp = jsonify(ret)
+        resp.status_code = 201
+        return resp
+    else:
+        resp = jsonify({'message': 'Allowed file types are .MP4 .MKV .MOV .WEBM .FLV'})
+        resp.status_code = 400
+        return res
+
+def api_result():
+
+    vid = Videos.query.order_by(Videos.vno.desc()).first()
+
+    vid_list = []
+    meta = []
+    vid_dict = {
+        "name" : vid.vname,
+        "url" : vid.vpath,
+        "date" : vid.vdate,
+        "fake_frames" : vid.vfrfake,
+        "real_frames" : vid.vfrreal,
+        "verdict" : vid.verd,
+        "accuracy" : vid.vacc
+    }
+
+    probe = ffmpeg.probe(vid.vpath)
+    video_stream = next((stream for stream in probe['streams'] if stream['codec_type'] == 'video'), None)
+
+    meta_dict = {
+        "width": int(video_stream['width']),
+        "height" : int(video_stream['height']),
+        "codec_name" : str(video_stream['codec_name']),
+        "bit_rate" : int(video_stream['bit_rate']),
+        "duration" : str(video_stream['duration']),
+        "avg_frame_rate": str(video_stream['avg_frame_rate'])[:2]
+
+    }
+
+    return [vid_dict,meta_dict]
+
+@app.route('/dfapi/data')
+def dfapi_data():
+    vid_list = []
+    v = Videos.query.all()
+    for vid in v:
+        vid_dict = {
+            "name": vid.vname,
+            "url": vid.vpath,
+            "date": vid.vdate,
+            "fake_frames": vid.vfrfake,
+            "real_frames": vid.vfrreal,
+            "verdict": vid.verd,
+            "accuracy": vid.vacc
+        }
+        vid_list.append(vid_dict)
+    resp = jsonify(vid_list)
+    resp.status_code = 201
+    return resp
 
 
 app.run(debug=True)
