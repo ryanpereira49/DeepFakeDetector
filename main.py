@@ -39,28 +39,18 @@ app.config["allowed_video_extensions"] = ["MP4", "MKV", "MOV", "WEBM", "FLV"]
 db = SQLAlchemy(app)
 
 
-# class Contact(db.Model):
-#     sno = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(20), nullable=False)
-#     email = db.Column(db.Integer, nullable=False)
-#     message = db.Column(db.String(20), nullable=False)
-#     date = db.Column(db.String(20), nullable=True)
-
 class users(db.Model):
     __tablename__ = "users"
-    uid = db.Column("UID", db.String(5), primary_key=True)
+    uid = db.Column("UID", db.Integer, primary_key=True)
     uname = db.Column("username", db.String(25), nullable=False)
     password = db.Column("password", db.String(25), nullable=False)
     email = db.Column("email", db.String(25), nullable=False)
-    DOB = db.Column("DOB", db.String(25), nullable=False)
 
-    def __init__(self, uid, uname, password, email, DOB):
+    def __init__(self, uid, uname, password, email):
         self.uid = uid
         self.uname = uname
         self.password = password
         self.email = email
-        self.DOB = DOB
-
 
 # class Videos(db.Model):
 #     vno = db.Column(db.Integer, primary_key=True)
@@ -111,30 +101,6 @@ with open("config.json", "r") as c:
 def indexpage():
     return render_template('index.html')
 
-
-@app.route('/dbtest')
-def testdb():
-    # insdb()
-    uans = users.query.all()
-    # print(users.query.count())
-    ass = " "
-    for r in uans:
-        ass += f"{r.uid} | {r.uname} | {r.password} | {r.email} | {r.DOB} \n"
-    vans = Video.query.all()
-    for v in vans:
-        ass += f"{v.VID} | {v.path} | {v.doup} | {v.label} | {v.fakeframes} | {v.vname} | {v.vfrfake} | {v.vfrreal} | {v.avgwt} | {v.UID} | "
-    return ass
-
-
-def insdb():
-    tot = users.query.count() + 1
-    uid = 'U0000'
-    uid = uid[:-1 * len(str(tot))] + str(tot)
-    entry = users(uid, "josh", "adlkskd", "joah@email.com", datetime.datetime.now())
-    db.session.add(entry)
-    db.session.commit()
-
-
 @app.route('/popular')
 def popularpage():
     vid = Video.query.all()
@@ -173,7 +139,21 @@ def submit_form():
 
 @app.route('/signup')
 def signup():
-    return render_template('about.html')
+    if request.method == "POST":
+        usersdb = users.query.all()
+        Unamef = request.form.get('uname')
+        Uemailf = request.form.get('uemail')
+        Upassf = request.form.get('upass')
+        for u in usersdb:
+            if Unamef == u.uid:
+                return render_template('signup.html', msg='Username Alerady Exists')
+            if Uemailf == u.email:
+                return render_template('signup.html', msg='Email Alerady Exists')
+        entry = users(uname=Unamef, password=Upassf, email=Uemailf)
+        db.session.add(entry)
+        db.session.commit()
+        return render_template('login.html', msg='Registration Sucessful, You can now Login')
+    return render_template('signup.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -182,10 +162,23 @@ def login():
         pass
 
     if request.method == 'POST':
-        username = request.form.get('uname')
-        password = request.form.get('pass')
-        if (username == params['admin_usr'] and password == params["admin_pass"]):
-            session['user'] = username
+        usersdb = users.query.all()
+        Unamef = request.form.get('uname')
+        Upassf = request.form.get('upass')
+        x = [u for u in usersdb if Unamef == u.uname and Upassf == u.password]
+        if not x:
+            return render_template('login.html', msg="Invalid Credentials!")
+        elif x[0].uname == Unamef:
+            session['Uname'] = Unamef
+            session['login'] = True
+            return render_template('index.html')
+    return render_template('login.html')
+
+
+@app.route('/logout'
+           '')
+def logout():
+    session.pop('Uname',None)
     return render_template('login.html')
 
 
@@ -350,6 +343,9 @@ def apires(usrname):
 
     else:
         return "Please send POST request"
+
+
+
 
 
 @app.route('/dmvfuanon', methods=["POST", "GET"])

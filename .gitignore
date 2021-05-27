@@ -1,9 +1,9 @@
 Lib/
 videos/
-static/Uploaded_videos
-static/frames/**
-static/videos
 ml/frames
 ml/Uploaded_videos
 ffprobe.exe
-static/marked/framed.mp4
+/static/marked/
+/static/frames/
+/static/Uploaded_videos/
+/static/apiloc/
